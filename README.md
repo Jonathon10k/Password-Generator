@@ -1,7 +1,7 @@
 # Password Generator (Module 5 Challenge)
 My submission for the Module 5 Password Generator JavaScript challenge
 
-![Password Generator preview](./images/screenshot.png)
+![Password Generator preview](./assets/screenshot.png)
 
 ## Description
 
@@ -10,7 +10,7 @@ This is my submission for the Module 5 Password Generator challenge. The challen
 
 ## Installation
 
-The project should be viewed within the Chrome DevTools console. To access the console, use: Command+Option+I (macOS) or Control+Shift+I (Windows).
+No installation is necessary. The project should be viewed within the browser by following the link below.
 
 ## Usage
 
