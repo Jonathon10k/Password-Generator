@@ -104,7 +104,7 @@ var userInput = {
     this.passLength = prompt("Please enter a character length for your generated password (min. 8, max. 128)");
 
     if (this.passLength >= 8 && this.passLength <= 128) { // Validate password length selection
-      for (item in this.charChoices) {
+      for (item in this.charChoices) { // Prompt for character type options
         this.charChoices[item].chosen = confirm(this.charChoices[item].prompt)
 
         if (this.charChoices[item].chosen) {
@@ -112,20 +112,19 @@ var userInput = {
         } else {
           this.charChoices[item].chosen = false;
         }
+        this.checkCharTypes(); // Invoke to check if at least 1 char type was selected
       }
     } else {
       alert("Incorrect password length. Please click 'Generate Password' to try again.")
-      return;
     }
-
+  },
+  checkCharTypes: function () {
     // Validate char types selection
     if (this.charTypes === 0) {
       alert("Please select at least 1 character type. Click 'Generate Password' to try again.")
-      return;
     }
   }
 }
-
 
 // Function for getting one or more random elements from an array (elems is number of chars to return)
 function getRandom(arr, elems = 1) {
@@ -139,6 +138,7 @@ function getRandom(arr, elems = 1) {
 // Function to generate password with user input
 function generatePassword() {
   userInput.getUserChoices();
+
   var combinedArrays = [];
 
   // Concat arrays containing chosen char types
@@ -148,7 +148,7 @@ function generatePassword() {
       combinedArrays = combinedArrays.concat(userInput.charChoices[i].arrayName);
     }
   }
-  // Return a string of specified length containing random tempArray chars
+  // Return a string of specified length containing random combinedArrays chars
   return getRandom(combinedArrays, userInput.passLength);
 }
 
@@ -163,7 +163,7 @@ function writePassword() {
   passwordText.value = password;
 
 
-  // DELETE BELOW
+  // Log length and char types
   console.log(`Length: ${password.length} Char types: ${userInput.charTypes}`);
 }
 
