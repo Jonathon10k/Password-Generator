@@ -5,7 +5,7 @@ My submission for the Module 5 Password Generator JavaScript challenge
 
 ## Description
 
-This is my submission for the Module 5 Password Generator challenge. The challenge was to create a password generator web app that takes in user input and outputs a randomly generated password following predetermined criteria.
+This is my submission for the Module 5 Password Generator challenge. The challenge was to create a password generator web app that takes in user input and outputs a randomly generated password following predetermined criteria. Users are able to choose the desired password length and also select from a range of character type options (uppercase, special characters, etc.)
 
 
 ## Installation
