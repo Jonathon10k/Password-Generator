@@ -93,41 +93,63 @@ var userInput = {
   passLength: 0,
   charTypes: 0,
 
-  charChoices: {
-    lowerCase: { choice: false, prompt: "Include lowercase characters?" },
-    upperCase: { choice: false, prompt: "Include uppercase characters?" },
-    numeric: { choice: false, prompt: "Include numeric characters?" },
-    specialChars: { choice: false, prompt: "Include special characters?" },
-  },
-
+  charChoices:
+    [
+      { name: "lowerCase", chosen: false, prompt: "Include lowercase characters?", arrayName: lowerCasedCharacters },
+      { name: "upperCase", chosen: false, prompt: "Include uppercase characters?", arrayName: upperCasedCharacters },
+      { name: "numeric", chosen: false, prompt: "Include numeric characters?", arrayName: numericCharacters },
+      { name: "specialChars", chosen: false, prompt: "Include special characters?", arrayName: specialCharacters },
+    ],
   getUserChoices: function () {
-    this.passLength = prompt("Please enter a password length (min. 8 characters)");
+    this.passLength = prompt("Please enter a character length for your generated password (min. 8, max. 128)");
 
-    if (this.passLength >= 8) {
+    if (this.passLength >= 8 && this.passLength <= 128) { // Validate password length selection
       for (item in this.charChoices) {
-        this.charChoices[item].choice = confirm(this.charChoices[item].prompt)
+        this.charChoices[item].chosen = confirm(this.charChoices[item].prompt)
 
-        if (this.charChoices[item].choice) {
+        if (this.charChoices[item].chosen) {
           this.charTypes++;
         } else {
-          console.log(`${this.charChoices[item]}: User selected false`)
+          this.charChoices[item].chosen = false;
         }
       }
+    } else {
+      alert("Incorrect password length. Please click 'Generate Password' to try again.")
+      return;
+    }
+
+    // Validate char types selection
+    if (this.charTypes === 0) {
+      alert("Please select at least 1 character type. Click 'Generate Password' to try again.")
+      return;
     }
   }
 }
 
 
-// Function for getting a random element from an array
-function getRandom(arr) {
-
+// Function for getting one or more random elements from an array (elems is number of chars to return)
+function getRandom(arr, elems = 1) {
+  var randomElem = "";
+  for (var i = 0; i < elems; i++) {
+    randomElem += arr[Math.floor(Math.random() * arr.length)];
+  }
+  return randomElem;
 }
 
 // Function to generate password with user input
 function generatePassword() {
   userInput.getUserChoices();
-  console.log(userInput.charOptions);
+  var combinedArrays = [];
 
+  // Concat arrays containing chosen char types
+  for (var i = 0; i < userInput.charChoices.length; i++) {
+    if (userInput.charChoices[i].chosen) {
+      console.log(userInput.charChoices[i].arrayName)
+      combinedArrays = combinedArrays.concat(userInput.charChoices[i].arrayName);
+    }
+  }
+  // Return a string of specified length containing random tempArray chars
+  return getRandom(combinedArrays, userInput.passLength);
 }
 
 // Get references to the #generate element
@@ -139,10 +161,11 @@ function writePassword() {
   var passwordText = document.querySelector('#password');
 
   passwordText.value = password;
+
+
+  // DELETE BELOW
+  console.log(`Length: ${password.length} Char types: ${userInput.charTypes}`);
 }
 
 // Add event listener to generate button
 generateBtn.addEventListener('click', writePassword);
-
-// 1. WHEN user clicks button THEN show LENGTH prompt. IF input is < 8 characters or undefined THEN repeat prompt.
-// 2. IF character type 
