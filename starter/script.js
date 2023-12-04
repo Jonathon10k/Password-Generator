@@ -92,6 +92,7 @@ var upperCasedCharacters = [
 var userInput = {
   passLength: 0,
   charTypes: 0,
+  validated: false,
 
   charChoices:
     [
@@ -101,29 +102,25 @@ var userInput = {
       { name: "specialChars", chosen: false, prompt: "Include special characters?", arrayName: specialCharacters },
     ],
   getUserChoices: function () {
+    // Prompt for password length
     this.passLength = prompt("Please enter a character length for your generated password (min. 8, max. 128)");
 
-    if (this.passLength >= 8 && this.passLength <= 128) { // Validate password length selection
-      for (item in this.charChoices) { // Prompt for character type options
-        this.charChoices[item].chosen = confirm(this.charChoices[item].prompt)
+    // Prompt for char options
+    for (item in this.charChoices) {
+      this.charChoices[item].chosen = confirm(this.charChoices[item].prompt)
 
-        if (this.charChoices[item].chosen) {
-          this.charTypes++;
-        } else {
-          this.charChoices[item].chosen = false;
-        }
-        this.checkCharTypes(); // Invoke to check if at least 1 char type was selected
+      if (this.charChoices[item].chosen) {
+        this.charTypes++;
       }
+    }
+    // Validate input options
+    if (this.passLength < 8 || this.passLength > 128 || this.charTypes === 0) {
+      alert("Invalid input: Passwords must be between 8-128 characters and contain at least 1 character type. Please click 'Generate Password' to try again.")
+      this.validated = false;
     } else {
-      alert("Incorrect password length. Please click 'Generate Password' to try again.")
+      this.validated = true;
     }
   },
-  checkCharTypes: function () {
-    // Validate char types selection
-    if (this.charTypes === 0) {
-      alert("Please select at least 1 character type. Click 'Generate Password' to try again.")
-    }
-  }
 }
 
 // Function for getting one or more random elements from an array (elems is number of chars to return)
@@ -139,17 +136,23 @@ function getRandom(arr, elems = 1) {
 function generatePassword() {
   userInput.getUserChoices();
 
-  var combinedArrays = [];
+  // Check if user input is validated
+  if (userInput.validated) {
+    var combinedArrays = [];
 
-  // Concat arrays containing chosen char types
-  for (var i = 0; i < userInput.charChoices.length; i++) {
-    if (userInput.charChoices[i].chosen) {
-      console.log(userInput.charChoices[i].arrayName)
-      combinedArrays = combinedArrays.concat(userInput.charChoices[i].arrayName);
+    // Concat arrays containing chosen char types
+    for (var i = 0; i < userInput.charChoices.length; i++) {
+      if (userInput.charChoices[i].chosen) {
+        console.log(userInput.charChoices[i].arrayName)
+        combinedArrays = combinedArrays.concat(userInput.charChoices[i].arrayName);
+      }
     }
+    // Return a string of specified length containing random combinedArrays chars
+    return getRandom(combinedArrays, userInput.passLength);
+
+  } else {
+    return "Input invalid: click 'Generate Password' to try again";
   }
-  // Return a string of specified length containing random combinedArrays chars
-  return getRandom(combinedArrays, userInput.passLength);
 }
 
 // Get references to the #generate element
